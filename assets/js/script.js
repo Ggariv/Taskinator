@@ -1,11 +1,11 @@
 var taskIdCounter = 0;
 var formEl = document.querySelector("#task-form");
-var taskToDoEl = document.querySelector("#tasks-to-do");
-var pageContentEl = document.querySelector("#page-content");
+var tasksToDoEl = document.querySelector("#tasks-to-do");
 var tasksInProgressEl = document.querySelector("#tasks-in-progress");
 var tasksCompletedEl = document.querySelector("#tasks-completed");
+var pageContentEl = document.querySelector("#page-content");
 
-var taskFormHandler = function() {
+var taskFormHandler = function(event) {
     event.preventDefault();
     var taskNameInput = document.querySelector("input[name='task-name']").value;
     var taskTypeInput = document.querySelector("select[name='task-type']").value;
@@ -63,7 +63,7 @@ var createTaskEl = function(taskDataObj) {
 
     var taskActionEl = createTaskActions(taskIdCounter);
     listItemEl.appendChild(taskActionEl);
-    taskToDoEl.appendChild(listItemEl);
+    tasksToDoEl.appendChild(listItemEl);
 
     // increase task counter for next unique id
     taskIdCounter++;
@@ -92,7 +92,7 @@ var createTaskActions = function(taskId) {
     var statusSelectEl = document.createElement("select");
     statusSelectEl.className = "select-status";
     statusSelectEl.setAttribute("name", "status-change");
-    statusSelectEl.setAttribute
+    statusSelectEl.setAttribute("data-task-id", taskId);
 
     actionContainerEl.appendChild(statusSelectEl);
 
@@ -153,13 +153,13 @@ var taskStatusChangeHandler = function(event) {
     var taskId = event.target.getAttribute("data-task-id");
 
     // get the currently selected option's value and convert to lowercase
-    var statusValue = event.target.toLowerCase();
+    var statusValue = event.target.value.toLowerCase();
 
     // find the parent task item element based on the id
     var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
 
     if (statusValue === "to do") {
-        taskToDoEl.appendChild(taskSelected);
+        tasksToDoEl.appendChild(taskSelected);
         }
     else if (statusValue === "in progress") {
         tasksInProgressEl.appendChild(taskSelected);
@@ -167,7 +167,7 @@ var taskStatusChangeHandler = function(event) {
     else if (statusValue === "completed") {
         tasksCompletedEl.appendChild(taskSelected);
         }
-    }
+    };
 
 formEl.addEventListener("submit", taskFormHandler);
 pageContentEl.addEventListener("click", taskButtonHandler);
